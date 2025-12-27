@@ -1,0 +1,334 @@
+/* Shared styles across all pages */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  background: #000;
+  color: #fff;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+a {
+  color: #fff;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+a:hover {
+  color: #ccc;
+}
+
+/* Navigation */
+.nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  padding: 1.5rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: linear-gradient(to bottom, rgba(0,0,0,0.8), transparent);
+}
+
+.nav-logo {
+  font-size: 1.2rem;
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.nav-logo:hover {
+  color: #fff;
+}
+
+.nav-links {
+  display: flex;
+  gap: 2rem;
+  list-style: none;
+}
+
+.nav-links a {
+  text-decoration: none;
+  font-size: 0.95rem;
+  color: #aaa;
+  transition: color 0.2s;
+}
+
+.nav-links a:hover,
+.nav-links a.active {
+  color: #fff;
+}
+
+/* Standard page layout (non-home pages) */
+.page {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 8rem 2rem 4rem;
+  min-height: 100vh;
+}
+
+.page h1 {
+  font-size: 2.5rem;
+  font-weight: 300;
+  margin-bottom: 2rem;
+  letter-spacing: -0.02em;
+}
+
+.page h2 {
+  font-size: 1.4rem;
+  font-weight: 400;
+  margin-top: 3rem;
+  margin-bottom: 1rem;
+  color: #ccc;
+}
+
+.page h3 {
+  font-size: 1.1rem;
+  font-weight: 500;
+  margin-top: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+.page p {
+  font-size: 1.1rem;
+  line-height: 1.7;
+  color: #aaa;
+  margin-bottom: 1.25rem;
+}
+
+/* Project/Publication cards */
+.card {
+  border: 1px solid #222;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  transition: border-color 0.2s;
+}
+
+.card:hover {
+  border-color: #444;
+}
+
+.card-title {
+  font-size: 1.2rem;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+}
+
+.card-meta {
+  font-size: 0.9rem;
+  color: #666;
+  margin-bottom: 0.75rem;
+}
+
+.card-description {
+  font-size: 1rem;
+  color: #aaa;
+  line-height: 1.6;
+}
+
+.card-links {
+  margin-top: 1rem;
+  display: flex;
+  gap: 1rem;
+}
+
+.card-links a {
+  font-size: 0.9rem;
+  color: #888;
+}
+
+.card-links a:hover {
+  color: #fff;
+}
+
+/* Blog list */
+.blog-list {
+  list-style: none;
+}
+
+.blog-item {
+  padding: 1.5rem 0;
+  border-bottom: 1px solid #222;
+}
+
+.blog-item:last-child {
+  border-bottom: none;
+}
+
+.blog-date {
+  font-size: 0.9rem;
+  color: #666;
+  margin-bottom: 0.5rem;
+}
+
+.blog-title {
+  font-size: 1.3rem;
+  font-weight: 400;
+  margin-bottom: 0.5rem;
+}
+
+.blog-title a {
+  text-decoration: none;
+}
+
+.blog-title a:hover {
+  text-decoration: underline;
+}
+
+.blog-excerpt {
+  font-size: 1rem;
+  color: #888;
+  line-height: 1.6;
+}
+
+/* Blog post */
+.post {
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 8rem 2rem 4rem;
+}
+
+.post-header {
+  margin-bottom: 3rem;
+}
+
+.post-title {
+  font-size: 2.2rem;
+  font-weight: 300;
+  margin-bottom: 1rem;
+  letter-spacing: -0.02em;
+}
+
+.post-date {
+  font-size: 0.95rem;
+  color: #666;
+}
+
+.post-content {
+  font-size: 1.1rem;
+  line-height: 1.8;
+  color: #bbb;
+}
+
+.post-content p {
+  margin-bottom: 1.5rem;
+}
+
+.post-content h2 {
+  font-size: 1.5rem;
+  font-weight: 400;
+  color: #fff;
+  margin-top: 2.5rem;
+  margin-bottom: 1rem;
+}
+
+.post-content code {
+  background: #111;
+  padding: 0.2em 0.4em;
+  border-radius: 3px;
+  font-size: 0.95em;
+}
+
+.post-content pre {
+  background: #111;
+  padding: 1rem;
+  border-radius: 6px;
+  overflow-x: auto;
+  margin-bottom: 1.5rem;
+}
+
+.post-content pre code {
+  background: none;
+  padding: 0;
+}
+
+/* CV page */
+.cv-container {
+  width: 100%;
+  height: calc(100vh - 10rem);
+  margin-top: 1rem;
+}
+
+.cv-container iframe {
+  width: 100%;
+  height: 100%;
+  border: 1px solid #222;
+  border-radius: 8px;
+}
+
+.cv-actions {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.cv-btn {
+  display: inline-block;
+  padding: 0.75rem 1.5rem;
+  background: #222;
+  border-radius: 6px;
+  text-decoration: none;
+  font-size: 0.95rem;
+  transition: background 0.2s;
+}
+
+.cv-btn:hover {
+  background: #333;
+  color: #fff;
+}
+
+/* Wider layout for CV page */
+.page.cv-page {
+  max-width: 1100px;
+}
+
+.page.cv-page h1 {
+  margin-bottom: 1.5rem;
+}
+
+/* Footer */
+.footer {
+  padding: 3rem 2rem;
+  text-align: center;
+  color: #444;
+  font-size: 0.9rem;
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  .nav {
+    padding: 1rem 1.5rem;
+  }
+
+  .nav-links {
+    gap: 1.25rem;
+  }
+
+  .nav-links a {
+    font-size: 0.85rem;
+  }
+
+  .page {
+    padding: 6rem 1.5rem 3rem;
+  }
+
+  .page h1 {
+    font-size: 2rem;
+  }
+
+  .post {
+    padding: 6rem 1.5rem 3rem;
+  }
+
+  .post-title {
+    font-size: 1.8rem;
+  }
+}

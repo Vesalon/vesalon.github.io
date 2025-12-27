@@ -100,6 +100,12 @@
 
 /* Mobile: skip animation entirely */
 @media (max-width: 768px) {
+  .nav {
+    background: transparent;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+  }
+
   #canvas {
     display: none;
   }

@@ -2,9 +2,9 @@ name: Build and Deploy
 
 on:
   push:
-    branches: [main]
+    branches: [master]
   pull_request:
-    branches: [main]
+    branches: [master]
 
 # Allow only one concurrent deployment
 concurrency:
@@ -43,7 +43,7 @@ jobs:
           path: _site/
 
   deploy:
-    if: github.ref == 'refs/heads/main'
+    if: github.ref == 'refs/heads/master'
     needs: build
     runs-on: ubuntu-latest
     

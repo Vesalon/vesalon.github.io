@@ -1,0 +1,30 @@
+title: Ves Grantcharov
+description: Personal website
+url: "" # Set to your github pages URL, e.g. https://username.github.io
+
+# Build settings
+markdown: kramdown
+kramdown:
+  math_engine: mathjax
+  input: GFM
+  syntax_highlighter: rouge
+
+# Exclude from build
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - README.md
+  - Makefile
+  - cv.md
+  - deploy.yml
+
+# Permalink structure for blog posts
+permalink: /blog/:title/
+
+# Default front matter
+defaults:
+  - scope:
+      path: ""
+      type: "posts"
+    values:
+      layout: "post"

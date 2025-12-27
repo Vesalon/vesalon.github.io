@@ -1,0 +1,9 @@
+<nav class="nav">
+  <a href="{{ '/' | relative_url }}" class="nav-logo">{{ site.title }}</a>
+  <ul class="nav-links">
+    <li><a href="{{ '/' | relative_url }}"{% if page.url == '/' %} class="active"{% endif %}>About</a></li>
+    <li><a href="{{ '/projects' | relative_url }}"{% if page.url == '/projects/' or page.url == '/projects.html' %} class="active"{% endif %}>Projects</a></li>
+    <li><a href="{{ '/assets/cv.pdf' | relative_url }}">CV</a></li>
+    <li><a href="{{ '/blog' | relative_url }}"{% if page.url contains '/blog' %} class="active"{% endif %}>Blog</a></li>
+  </ul>
+</nav>

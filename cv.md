@@ -47,6 +47,8 @@ Contributing to information retrieval system for materials science research, cur
 
 Investigating whether curvature-informed optimization can be wall-time competitive for deep learning. Building on Hessian-free methods (Martens & Sutskever, 2012), replacing conjugate gradient with LSQR for solving the Gauss-Newton subproblem, avoiding explicit formation of Jacobian or Hessian matrices. Implemented distributed dense LSQR using MPI all-reduce; extending to GPU/NCCL with JAX.
 
+\newpage
+
 ## Georgia Tech
 *Undergraduate Researcher, advised by Ernest Croot* (2018 - 2019)
 
@@ -61,20 +63,20 @@ Developed Julia packages for nonnegative matrix factorization and SVM, integrate
 
 # Industry Experience
 
-## Fitch Ratings (New York)
-*Senior Machine Learning Engineer* (2022 - 2024)
+## Fitch Ratings
+*Senior Machine Learning Engineer* (2022 - 2024), New York
 
 Built retrieval-augmented generation system over 270k research documents, from initial prototype to production feature for premium subscribers. Diagnosed relevance failures in naive RAG approach and developed NER-based query preprocessing to extract entities (company, industry, year) for metadata filtering, improving retrieval from demo-able to production-ready. Explored agentic RAG architectures using LangGraph. Feature announced in [public press release](https://www.fitchsolutions.com/news/fitch-genie-ai-chat-solution-added-to-fitch-ratings-pro-research-platform-22-07-2025) after departure.
 
 Led ML for ESG data extraction project automating metric extraction from company documents using instruction-tuned LLMs. Developed custom heuristics for paragraph segmentation using spatial and textual features of document elements.
 
-## Lifion by ADP (New York)
-*Machine Learning Engineer / Applied Scientist* (2020 - 2022)
+## Lifion by ADP
+*Machine Learning Engineer / Applied Scientist* (2020 - 2022), New York
 
 Proposed and implemented learning-to-rank model to personalize search results based on user history, drawing on approaches from Yelp's search ranking. Implemented hybrid search combining HNSW vector indices with n-gram matching before vector databases were widely available.
 
-## Georgia Pacific (Atlanta)
-*Data Engineer* (2019 - 2020)
+## Georgia Pacific
+*Data Engineer* (2019 - 2020), Atlanta
 
 Developed LSTM model for predicting plywood quality grades from time series data of dryer temperatures and line velocity, supporting manufacturing optimization.
 
@@ -88,6 +90,6 @@ ACM ICPC Southeast Regionals - 4th place (2018)
 
 # Skills
 
-**Graduate Coursework:** Numerical Linear Algebra, Numerical ODEs, Stochastics, Deep Reinforcement Learning, Parallel Processing
+**Graduate Coursework:** Deep Reinforcement Learning, Parallel Processing, Numerical Linear Algebra, Numerical ODEs, Stochastics, Material Characterization Methods, Chemistry and Physics at the Nanoscale, Nanofabrication
 
-**Languages & Tools:** Python (JAX, PyTorch, NumPy, SciPy), C, SQL, MPI/NCCL
+**Languages & Tools:** Python (JAX, PyTorch, NumPy, SciPy, Pandas, Langchain/Langgraph), C, MPI/NCCL, CUDA, SQL, Spark/Deltalake, Elastic/OpenSearch, Neo4J, AWS, Azure, GCP, LaTeX, Git, Bash, Slurm

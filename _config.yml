@@ -1,6 +1,6 @@
 title: Ves Grantcharov
 description: Personal website
-url: "" # Set to your github pages URL, e.g. https://username.github.io
+url: "https://vesgrantcharov.com"
 
 # Build settings
 markdown: kramdown

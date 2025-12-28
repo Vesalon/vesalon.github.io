@@ -92,4 +92,4 @@ ACM ICPC Southeast Regionals - 4th place (2018)
 
 **Graduate Coursework:** Deep Reinforcement Learning, Parallel Processing, Numerical Linear Algebra, Numerical ODEs, Stochastics, Material Characterization Methods, Chemistry and Physics at the Nanoscale, Nanofabrication
 
-**Languages & Tools:** Python (JAX, PyTorch, NumPy, SciPy, Pandas, Langchain/Langgraph), C, MPI/NCCL, CUDA, SQL, Spark/Deltalake, Elastic/OpenSearch, Neo4J, AWS, Azure, GCP, LaTeX, Git, Bash, Slurm
+**Languages & Tools:** Python (JAX, PyTorch, NumPy, SciPy, Pandas, LangChain/LangGraph), C, MPI/NCCL, CUDA, Slurm, SQL, Spark/Deltalake, Elastic/OpenSearch, Neo4J, AWS, Azure, GCP, Jenkins, Docker, Kubernetes, LaTeX, Git, Bash

@@ -16,4 +16,4 @@ Prior to starting my PhD, I spent five years working, including as a **Machine L
 
 ## Contact
 
-Get in touch via [email](mailto:ves@unm.com) or find me on [LinkedIn](https://www.linkedin.com/in/ves-grantcharov/) or [GitHub](https://github.com/Vesalon).
+Get in touch via [email](mailto:ves@unm.com) or find me on: [LinkedIn](https://www.linkedin.com/in/ves-grantcharov/), [GitHub](https://github.com/Vesalon), [Google Scholar](https://scholar.google.com/citations?user=tyQm-wUAAAAJ), [Research Gate](https://www.researchgate.net/profile/Vesselin-Grantcharov)

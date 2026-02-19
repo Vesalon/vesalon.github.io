@@ -6,29 +6,24 @@ title: Projects & Publications
 ## Publications
 
 <div class="card">
-  <div class="card-title">A Very Important Research Paper</div>
-  <div class="card-meta">Ves Grantcharov, Collaborator One, Collaborator Two — Conference 2024</div>
+  <div class="card-title">Domain-Specific Retrieval-Augmented Generation Using Vector Stores, Knowledge Graphs, and Tensor Factorization</div>
+  <div class="card-meta">Ryan C Barron*, Vesselin Grantcharov*, Selma Wanna, Maksim E Eren, Manish Bhattarai, Nicholas Solovyev, George Tompkins, Charles Nicholas, Kim Ø Rasmussen, Cynthia Matuszek, Boian S Alexandrov — ICMLA 2024</div>
   <p class="card-description">
-    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod 
-    tempor incididunt ut labore et dolore magna aliqua.
+    Hybrid information retrieval system for materials science research combining graph databases for bibliometric queries with vector search for semantic retrieval, using query classification to route between approaches.
   </p>
   <div class="card-links">
-    <a href="#">Paper</a>
-    <a href="#">Code</a>
-    <a href="#">Demo</a>
+    <a href="https://ieeexplore.ieee.org/abstract/document/10903241">Paper</a>
   </div>
 </div>
 
 <div class="card">
-  <div class="card-title">Another Groundbreaking Study</div>
-  <div class="card-meta">Ves Grantcharov, Collaborator Three — Journal 2023</div>
+  <div class="card-title">HEAL: Hierarchical Embedding Alignment Loss for Improved Retrieval and Representation Learning</div>
+  <div class="card-meta">Manish Bhattarai, Ryan Barron, Maksim E. Eren, Minh N. Vu, Vesselin Grantcharov, Ismael Ismael, Valentin Stanev, Cynthia Matuszek, Vladimir I Valtchinov, Kim Rasmussen, Boian S. Alexandrov — KnowledgeNLP Workshop @ COLING 2025</div>
   <p class="card-description">
-    Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore 
-    eu fugiat nulla pariatur.
+    Method for hierarchical embedding alignment to improve retrieval and representation learning in domain-specific applications.
   </p>
   <div class="card-links">
-    <a href="#">Paper</a>
-    <a href="#">Slides</a>
+    <a href="https://aclanthology.org/2025.knowledgenlp-1.19/">Paper</a>
   </div>
 </div>
 

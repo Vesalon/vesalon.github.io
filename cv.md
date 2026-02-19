@@ -19,7 +19,10 @@ BSc in Discrete Mathematics, Minor in Computer Science (Intelligence)
 
 # Publications
 
-- Ryan C Barron\*, **Vesselin Grantcharov**\*, Selma Wanna, Maksim E Eren, Manish Bhattarai, Nicholas Solovyev, George Tompkins, Charles Nicholas, Kim Ø Rasmussen, Cynthia Matuszek, Boian S Alexandrov. "Domain-Specific Retrieval-Augmented Generation Using Vector Stores, Knowledge Graphs, and Tensor Factorization." ICMLA 2024. (35 citations, \*equal contribution)
+- Ryan C Barron\*, **Vesselin Grantcharov**\*, Selma Wanna, Maksim E Eren, Manish Bhattarai, Nicholas Solovyev, George Tompkins, Charles Nicholas, Kim Ø Rasmussen, Cynthia Matuszek, Boian S Alexandrov. "Domain-Specific Retrieval-Augmented Generation Using Vector Stores, Knowledge Graphs, and Tensor Factorization." ICMLA 2024.
+
+    \*equal contribution
+
 
 - Manish Bhattarai, Ryan Barron, Maksim E. Eren, Minh N. Vu, **Vesselin Grantcharov**, Ismael Ismael, Valentin Stanev, Cynthia Matuszek, Vladimir I Valtchinov, Kim Rasmussen, Boian S. Alexandrov. "HEAL: Hierarchical Embedding Alignment Loss for Improved Retrieval and Representation Learning." KnowledgeNLP Workshop @ COLING 2025.
 

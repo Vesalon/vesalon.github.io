@@ -85,7 +85,7 @@ Developed LSTM model for predicting plywood quality grades from time series data
 
 # Awards
 
-Student Research Grant, University of New Mexico (2206)
+Student Research Grant, University of New Mexico (2026)
 
 Graduate Student Excellence Award, University of New Mexico School of Engineering (2025)
 

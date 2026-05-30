@@ -85,6 +85,8 @@ Developed LSTM model for predicting plywood quality grades from time series data
 
 # Awards
 
+Student Research Grant, University of New Mexico (2206)
+
 Graduate Student Excellence Award, University of New Mexico School of Engineering (2025)
 
 Putnam Mathematical Competition - 70th percentile (2016), 60th percentile (2015)

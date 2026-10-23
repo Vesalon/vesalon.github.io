@@ -1,0 +1,335 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kernel Tide — Liquid</title>
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; overflow: hidden; background: #000; color: #fff; font-family: system-ui, -apple-system, Segoe UI, sans-serif; }
+  canvas { position: fixed; inset: 0; width: 100vw; height: 100vh; display: block; }
+  #dots { pointer-events: none; }
+  #panel {
+    position: fixed; left: 13px; top: 13px; z-index: 2;
+    width: 235px; padding: 11px 13px;
+    border: 1px solid rgba(255,255,255,.19);
+    border-radius: 11px; color: #f0f0f0;
+    background: rgba(20,20,20,.65);
+    backdrop-filter: blur(12px);
+    transition: opacity .2s;
+    opacity: .32;
+    user-select: none;
+  }
+  #panel:hover, #panel:focus-within { opacity: 1; }
+  #panel.hidden { display: none; }
+  .modes { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; margin-bottom: 12px; }
+  button { color: #ddd; font: inherit; cursor: pointer; border-radius: 6px; border: 1px solid rgba(255,255,255,.19); background: rgba(255,255,255,.055); }
+  button:hover { background: rgba(255,255,255,.16); }
+  .mode { padding: 7px 5px; font-size: 12px; }
+  .mode.selected { background: #eee; border-color: #eee; color: #121212; }
+  .control { display: grid; grid-template-columns: 47px 1fr 39px; gap: 9px; align-items: center; margin: 10px 0; font-size: 11px; }
+  .control output { color: #aaa; text-align: right; font-variant-numeric: tabular-nums; }
+  input[type="range"] { width: 100%; accent-color: #efefef; height: 12px; margin: 0; cursor: pointer; }
+  .check { display: flex; justify-content: space-between; align-items: center; margin: 12px 0 9px; font-size: 11px; }
+  input[type="checkbox"] { accent-color: #eee; cursor: pointer; }
+  .actions { display: flex; gap: 6px; }
+  .actions button { flex: 1; padding: 6px 5px; font-size: 11px; }
+  .hint { font-size: 10px; color: #888; margin-top: 9px; }
+</style>
+</head>
+<body>
+<canvas id="scene"></canvas>
+<canvas id="dots"></canvas>
+<div id="panel">
+  <div class="modes">
+    <button class="mode selected" id="regions">Regions</button>
+    <button class="mode" id="contours">Contours</button>
+  </div>
+  <div class="control"><label for="count">points</label><input id="count" type="range" min="24" max="220" step="1" value="155"><output id="countVal"></output></div>
+  <div class="control"><label for="size">size</label><input id="size" type="range" min="0.065" max="0.40" step="0.005" value="0.17"><output id="sizeVal"></output></div>
+  <div class="control"><label for="speed">speed</label><input id="speed" type="range" min="0" max="2" step="0.01" value="0.55"><output id="speedVal"></output></div>
+  <div class="control"><label for="flow">swirl</label><input id="flow" type="range" min="0" max="2.5" step="0.01" value="1.0"><output id="flowVal"></output></div>
+  <div class="control"><label for="bias">bias</label><input id="bias" type="range" min="-0.35" max="0.35" step="0.005" value="0"><output id="biasVal"></output></div>
+  <label class="check" for="showPoints">show points <input id="showPoints" type="checkbox"></label>
+  <div class="actions"><button id="reseed">shuffle</button><button id="pause">pause</button></div>
+  <div class="hint">H hide controls · Space pause · M switch mode</div>
+</div>
+<script>
+(() => {
+  'use strict';
+  const canvas = document.getElementById('scene');
+  const markerCanvas = document.getElementById('dots');
+  const markerCtx = markerCanvas.getContext('2d');
+  const gl = canvas.getContext('webgl2', {alpha: false, antialias: false, preserveDrawingBuffer: false});
+  if (!gl) {
+    const div = document.createElement('div');
+    div.textContent = 'This sketch needs WebGL2.';
+    div.style.cssText = 'position:fixed;top:25px;left:25px;color:white';
+    document.body.appendChild(div);
+    return;
+  }
+
+  const NMAX = 224;
+  const pos = new Float32Array(NMAX * 2);
+  const weight = new Float32Array(NMAX);
+  const $ = id => document.getElementById(id);
+  const panel = $('panel');
+  const cfg = {count: 155, size: 0.17, speed: 0.55, flow: 1, bias: 0, mode: 0, showPoints: false};
+  let aspect = 1;
+  let paused = false;
+  let drag = -1;
+  let time = 0;
+  let last = null;
+  let quality = 1;
+  const TAU = Math.PI * 2;
+  const rnd = (a, b) => a + (b - a) * Math.random();
+
+  function resize() {
+    const width = Math.max(1, window.innerWidth);
+    const height = Math.max(1, window.innerHeight);
+    aspect = width / height;
+    // Full-viewport canvas, modest internal resolution for an expensive fragment shader.
+    const scale = Math.min(devicePixelRatio || 1, 1.0) * Math.min(1, 1400 / width, 850 / height) * quality;
+    canvas.width = Math.max(1, Math.round(width * scale));
+    canvas.height = Math.max(1, Math.round(height * scale));
+    markerCanvas.width = Math.max(1, Math.round(width * (devicePixelRatio || 1)));
+    markerCanvas.height = Math.max(1, Math.round(height * (devicePixelRatio || 1)));
+    gl.viewport(0, 0, canvas.width, canvas.height);
+  }
+  window.addEventListener('resize', resize);
+  resize();
+
+  function seed() {
+    for (let i = 0; i < NMAX; ++i) {
+      pos[2*i] = rnd(-aspect, aspect);
+      pos[2*i+1] = rnd(-1, 1);
+      weight[i] = (Math.random() < 0.5 ? -1 : 1) * rnd(0.62, 1.35);
+    }
+  }
+  seed();
+
+  // Several slowly phase-shifting stream-function modes. Each mode contributes
+  // a divergence-free velocity field: (dψ/dy, -dψ/dx).
+  // Integer spatial frequencies make the field periodic across the canvas edges.
+  const modes = [
+    {kx:1, ky:1, a:.093, sx:.103, sy:-.067, px:1.2, py:3.1},
+    {kx:2, ky:1, a:.062, sx:-.049, sy:.085, px:3.6, py:1.4},
+    {kx:1, ky:3, a:.029, sx:.072, sy:.058, px:2.5, py:5.4},
+    {kx:3, ky:2, a:.021, sx:-.082, sy:.069, px:4.1, py:2.2},
+    {kx:4, ky:3, a:.011, sx:.064, sy:-.044, px:0.6, py:4.7}
+  ];
+
+  function velocity(x, y, t) {
+    // Very slow large-scale translation superposed with the curl flow.
+    let vx = .075*Math.cos(.14*t) + .038*Math.sin(.055*t);
+    let vy = .052*Math.sin(.11*t) - .035*Math.cos(.077*t);
+    for (let k=0; k<modes.length; ++k) {
+      const m=modes[k];
+      const kx=Math.PI*m.kx/aspect;
+      const ky=Math.PI*m.ky;
+      const a=kx*x + m.sx*t + m.px;
+      const b=ky*y + m.sy*t + m.py;
+      const ca=Math.cos(a), sa=Math.sin(a);
+      const cb=Math.cos(b), sb=Math.sin(b);
+      vx += cfg.flow*m.a*ky*sa*cb;
+      vy -= cfg.flow*m.a*kx*ca*sb;
+    }
+    return [vx, vy];
+  }
+
+  const wrap = (v, r) => ((v + r) % (2*r) + (2*r)) % (2*r) - r;
+  function advance(dt) {
+    const nextTime = time + dt;
+    for (let i=0; i<cfg.count; ++i) {
+      if (drag === i) continue;
+      const j=2*i;
+      const x=pos[j], y=pos[j+1];
+      // Midpoint integration avoids sharp frame-to-frame changes in direction.
+      const v1=velocity(x,y,time);
+      const mx=x + .5*dt*v1[0], my=y + .5*dt*v1[1];
+      const v2=velocity(mx,my,time+.5*dt);
+      pos[j] = wrap(x+dt*v2[0], aspect);
+      pos[j+1] = wrap(y+dt*v2[1], 1);
+    }
+    time=nextTime;
+  }
+
+  const vertexSource = `#version 300 es
+    precision highp float;
+    void main() {
+      vec2 p = vec2((gl_VertexID == 1) ? 3.0 : -1.0,
+                    (gl_VertexID == 2) ? 3.0 : -1.0);
+      gl_Position = vec4(p, 0.0, 1.0);
+    }
+  `;
+  const fragmentSource = `#version 300 es
+    precision highp float;
+    #define MAX_POINTS 224
+    out vec4 frag;
+    uniform vec2 uResolution;
+    uniform int uCount;
+    uniform vec2 uPos[MAX_POINTS];
+    uniform float uWeight[MAX_POINTS];
+    uniform float uSize;
+    uniform float uBias;
+    uniform int uMode;
+
+    void main() {
+      vec2 p = (gl_FragCoord.xy / uResolution) * 2.0 - 1.0;
+      float aspect = uResolution.x / uResolution.y;
+      p.x *= aspect;
+      float ss = uSize * uSize;
+      float f = uBias;
+      float coverage = 0.0;
+      for(int i=0; i<MAX_POINTS; ++i) {
+        if (i >= uCount) break;
+        vec2 d = p - uPos[i];
+        // Periodic nearest image; points crossing the edge stay visually continuous.
+        d.x -= 2.0*aspect*round(d.x/(2.0*aspect));
+        d.y -= 2.0*round(d.y/2.0);
+        float r2 = dot(d,d);
+        if (r2 < 18.0*ss) {
+          float k = exp(-.5*r2/ss);
+          f += uWeight[i]*k;
+          coverage += k;
+        }
+      }
+      float result;
+      if (uMode == 0) {
+        float edge = max(fwidth(f), .00003);
+        result = smoothstep(-edge, edge, f);
+      } else {
+        float grad = max(fwidth(f), .00003);
+        float normalizedDist = abs(f)/grad;
+        result = 1.0-smoothstep(.55, 1.55, normalizedDist);
+        // Avoid artificial contours in almost-zero numerical tails.
+        result *= smoothstep(.002, .016, coverage);
+      }
+      frag = vec4(vec3(result),1.0);
+    }
+  `;
+
+  function shader(type, source) {
+    const sh=gl.createShader(type);
+    gl.shaderSource(sh,source);
+    gl.compileShader(sh);
+    if (!gl.getShaderParameter(sh, gl.COMPILE_STATUS)) {
+      throw new Error(gl.getShaderInfoLog(sh) || 'Shader compilation failed');
+    }
+    return sh;
+  }
+  const program=gl.createProgram();
+  gl.attachShader(program, shader(gl.VERTEX_SHADER, vertexSource));
+  gl.attachShader(program, shader(gl.FRAGMENT_SHADER, fragmentSource));
+  gl.linkProgram(program);
+  if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
+    throw new Error(gl.getProgramInfoLog(program) || 'Link failed');
+  }
+  gl.useProgram(program);
+  const uniform = name => gl.getUniformLocation(program,name);
+  const u = {res:uniform('uResolution'), count:uniform('uCount'), pos:uniform('uPos'), weight:uniform('uWeight'), size:uniform('uSize'), bias:uniform('uBias'), mode:uniform('uMode')};
+
+  function drawPoints() {
+    markerCtx.clearRect(0,0,markerCanvas.width,markerCanvas.height);
+    if (!cfg.showPoints) return;
+    const w=markerCanvas.width, h=markerCanvas.height;
+    markerCtx.lineWidth=Math.max(1, w/1000);
+    for(let i=0; i<cfg.count; ++i) {
+      const x=w*(pos[2*i]/aspect+1)/2;
+      const y=h*(1-pos[2*i+1])/2;
+      markerCtx.beginPath();
+      markerCtx.arc(x,y,Math.max(2,w/550),0,TAU);
+      markerCtx.fillStyle=weight[i]>0 ? '#fff' : '#000';
+      markerCtx.strokeStyle=weight[i]>0 ? '#000' : '#fff';
+      markerCtx.fill(); markerCtx.stroke();
+    }
+  }
+
+  function draw(ms) {
+    if (last === null) last=ms;
+    const dt=Math.min(.035,Math.max(0,(ms-last)/1000));
+    last=ms;
+    if (!paused) advance(dt*cfg.speed);
+    gl.useProgram(program);
+    gl.uniform2f(u.res,canvas.width,canvas.height);
+    gl.uniform1i(u.count,cfg.count);
+    gl.uniform2fv(u.pos,pos);
+    gl.uniform1fv(u.weight,weight);
+    gl.uniform1f(u.size,cfg.size);
+    gl.uniform1f(u.bias,cfg.bias);
+    gl.uniform1i(u.mode,cfg.mode);
+    gl.drawArrays(gl.TRIANGLES,0,3);
+    drawPoints();
+    requestAnimationFrame(draw);
+  }
+
+  function setMode(mode) {
+    cfg.mode=mode;
+    $('regions').classList.toggle('selected',mode===0);
+    $('contours').classList.toggle('selected',mode===1);
+  }
+  $('regions').addEventListener('click',()=>setMode(0));
+  $('contours').addEventListener('click',()=>setMode(1));
+  const controls=[
+    ['count',value=>cfg.count=Number(value),0],
+    ['size',value=>cfg.size=Number(value),2],
+    ['speed',value=>cfg.speed=Number(value),2],
+    ['flow',value=>cfg.flow=Number(value),2],
+    ['bias',value=>cfg.bias=Number(value),2]
+  ];
+  for(const [id, set, digits] of controls) {
+    const element=$(id), output=$(id+'Val');
+    function change() {set(element.value);output.textContent=Number(element.value).toFixed(digits);}
+    element.addEventListener('input',change);
+    change();
+  }
+  $('showPoints').addEventListener('change',e=>cfg.showPoints=e.target.checked);
+  $('reseed').addEventListener('click',seed);
+  function togglePause() {
+    paused=!paused;
+    $('pause').textContent=paused?'play':'pause';
+  }
+  $('pause').addEventListener('click',togglePause);
+  window.addEventListener('keydown',e=>{
+    if (e.key.toLowerCase()==='h') panel.classList.toggle('hidden');
+    if (e.key.toLowerCase()==='m') setMode(1-cfg.mode);
+    if (e.code==='Space') {e.preventDefault();togglePause();}
+    if (e.key==='Escape') panel.classList.remove('hidden');
+  });
+
+  // Optional direct manipulation when the source markers are visible.
+  function mouseWorld(e) {
+    const r=canvas.getBoundingClientRect();
+    return [((e.clientX-r.left)/r.width*2-1)*aspect, 1-((e.clientY-r.top)/r.height*2)];
+  }
+  canvas.addEventListener('pointerdown',e=>{
+    if (!cfg.showPoints) return;
+    const [x,y]=mouseWorld(e);
+    let best=-1,dist=Infinity;
+    for(let i=0;i<cfg.count;++i) {
+      const d=(pos[2*i]-x)**2+(pos[2*i+1]-y)**2;
+      if(d<dist) {dist=d;best=i;}
+    }
+    if (best>=0 && dist<(.14)**2) {
+      drag=best;
+      canvas.setPointerCapture(e.pointerId);
+    }
+  });
+  canvas.addEventListener('pointermove',e=>{
+    if(drag<0) return;
+    const [x,y]=mouseWorld(e);
+    pos[2*drag]=wrap(x,aspect);
+    pos[2*drag+1]=wrap(y,1);
+  });
+  function release(e) {
+    drag=-1;
+    if (canvas.hasPointerCapture(e.pointerId)) canvas.releasePointerCapture(e.pointerId);
+  }
+  canvas.addEventListener('pointerup',release);
+  canvas.addEventListener('pointercancel',release);
+
+  requestAnimationFrame(draw);
+})();
+</script>
+</body>
+</html>

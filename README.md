@@ -1,6 +1,6 @@
 # Personal Website (Jekyll)
 
-A Jekyll-based personal website with animated tessellation background.
+A Jekyll-based personal website with an animated contour-field background.
 
 ## Structure
 
@@ -8,13 +8,14 @@ A Jekyll-based personal website with animated tessellation background.
 ├── _config.yml          # Site configuration
 ├── _layouts/            # Page templates
 │   ├── base.html        # Base template (nav, footer, head)
-│   ├── home.html        # Home page with tessellation
+│   ├── home.html        # Home page with animated background
 │   ├── page.html        # Standard pages
 │   ├── post.html        # Blog posts
 │   └── blog.html        # Blog listing
 ├── _includes/           # Reusable HTML snippets
 │   └── nav.html         # Navigation bar
 ├── _posts/              # Blog posts (markdown)
+├── gallery/             # Generative sketches, one standalone page each
 ├── assets/
 │   ├── css/
 │   ├── js/
